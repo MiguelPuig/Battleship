@@ -7,6 +7,5 @@ import java.util.Date;
 import java.util.List;
 
 @RepositoryRestResource
-public interface GameRepository extends JpaRepository<Game, Long> {
+public interface ShipRepository extends JpaRepository<Ship, Long> {
 }
-

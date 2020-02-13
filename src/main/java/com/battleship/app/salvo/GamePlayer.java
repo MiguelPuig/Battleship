@@ -3,13 +3,17 @@ package com.battleship.app.salvo;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class GamePlayer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
-    private long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="player_id")
@@ -18,6 +22,12 @@ public class GamePlayer {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="game_id")
     private Game game;
+
+    @OneToMany(mappedBy="gamePlayer", fetch=FetchType.EAGER)
+    Set<Ship> ships = new HashSet<>();
+
+    @OneToMany(mappedBy="gamePlayer", fetch=FetchType.EAGER)
+    Set<Salvo> salvos = new HashSet<>();
 
     //@OneToOne(fetch = FetchType.EAGER)
     //@JoinColumn(name="date_id")
@@ -35,6 +45,17 @@ public class GamePlayer {
     }
 
 
+
+    public void addShip(Ship ship){
+        ships.add(ship);
+        ship.setGamePlayer(this);
+    }
+
+    public void addSalvo(Salvo salvo){
+        salvos.add(salvo);
+        salvo.setGamePlayer(this);
+    }
+
     public Player getPlayer() {
         return player;
     }
@@ -47,8 +68,16 @@ public class GamePlayer {
         return date;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
+    }
+
+    public Set<Ship> getShips() {
+        return ships;
+    }
+
+    public Set<Salvo> getSalvo() {
+        return salvos;
     }
 
     public void setPlayer(Player player) {
@@ -62,6 +91,10 @@ public class GamePlayer {
     public void setDate(Date date) {
         this.date = date;
     }
+
+
+
+
 
     @Override
     public String toString() {
